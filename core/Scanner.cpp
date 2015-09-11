@@ -7,7 +7,6 @@
  */
 
 #include "Scanner.hpp"
-#include <iostream>
 #include <sstream>
 
 namespace core
