@@ -11,10 +11,10 @@
 #include <QDirIterator>
 #include <QThreadPool>
 
-namespace objects 
+namespace objects
 {
 
-Handler::Handler(const QStringList& files, 
+Handler::Handler(const QStringList& files,
     const core::TSignaturesBySizes& signatures
     ) noexcept
     : mFiles(files)
@@ -23,25 +23,26 @@ Handler::Handler(const QStringList& files,
 {
 }
 
-void Handler::process() 
+void Handler::process()
 {
-    for (auto& f: mFiles) 
+    QThreadPool::globalInstance()->setMaxThreadCount(4);
+    for (auto& f: mFiles)
     {
         ThreadScanner *task = new ThreadScanner(f, mSignatures);
         task->setAutoDelete(true);
 
-        connect(task, SIGNAL(finished(const QString&, const QStringList&)), 
+        connect(task, SIGNAL(finished(const QString&, const QStringList&)),
             this, SLOT(finishedTask(const QString&, const QStringList&)));
 
         QThreadPool::globalInstance()->start(task);
     }
 }
 
-void Handler::finishedTask(const QString& filename, const QStringList& result) 
+void Handler::finishedTask(const QString& filename, const QStringList& result)
 {
     mProcessed[filename.toLocal8Bit().constData()] = result;
     emit finishedFile(filename, result);
-    mInfected += result.size() != 0; 
+    mInfected += result.size() != 0;
     emit processed(mProcessed.size(), mFiles.size(), mInfected);
 }
 
