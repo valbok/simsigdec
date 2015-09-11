@@ -24,4 +24,4 @@ Build
 Tests
 *****
     
-    $ cd core/tests; ScannerTest; configTest# simsigdec
+    $ cd core/tests; ScannerTest; configTest
