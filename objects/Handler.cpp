@@ -23,18 +23,36 @@ Handler::Handler(const QStringList& files,
 {
 }
 
+void run(const QStringList& files, const core::TSignaturesBySizes& signatures, Handler* handler)
+{
+    ThreadScanner* task = new ThreadScanner(files, signatures);
+    task->setAutoDelete(true);
+
+    QObject::connect(task, SIGNAL(finished(const QString&, const QStringList&)),
+        handler, SLOT(finishedTask(const QString&, const QStringList&)));
+
+    QThreadPool::globalInstance()->start(task);
+}
+
 void Handler::process()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(4);
-    for (auto& f: mFiles)
+    const int numThreads = 5;
+    const int numFiles = mFiles.size() / numThreads;
+    QThreadPool::globalInstance()->setMaxThreadCount(numThreads);
+
+    QStringList files;
+    for (int i = 0; i < mFiles.size(); ++i)
     {
-        ThreadScanner *task = new ThreadScanner(f, mSignatures);
-        task->setAutoDelete(true);
-
-        connect(task, SIGNAL(finished(const QString&, const QStringList&)),
-            this, SLOT(finishedTask(const QString&, const QStringList&)));
-
-        QThreadPool::globalInstance()->start(task);
+        files.push_back(mFiles[i]);
+        if (files.size() >= numFiles)
+        {
+            run(files, mSignatures, this);
+            files.clear();
+        }
+    }
+    if (!files.empty())
+    {
+        run(files, mSignatures, this);
     }
 }
 

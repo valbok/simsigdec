@@ -16,18 +16,41 @@
 namespace objects
 {
 
+/**
+ * Task to proceed in a thread. Hanldes a batch of files.
+ */
 class ThreadScanner : public QObject, public QRunnable
 {
     Q_OBJECT
 public:
-    ThreadScanner(const QString& filename, const core::TSignaturesBySizes& signatures);
+
+    /**
+     * @param Files to process
+     */
+    ThreadScanner(const QStringList& files, const core::TSignaturesBySizes& signatures);
+
+    /**
+     * @copydoc QRunnable::run()
+     */
     void run();
 
 signals:
+
+    /**
+     * Emited when file is finished to process.
+     */
     void finished(const QString& filename, const QStringList& result);
 
 private:
-    const QString& mName;
+
+    /**
+     * Batch of files to process.
+     */
+    const QStringList mFiles;
+
+    /**
+     * Predefined sequences of bytes.
+     */
     const core::TSignaturesBySizes& mSignatures;
 };
 

@@ -14,31 +14,34 @@ namespace objects
 {
 
 ThreadScanner::ThreadScanner(
-    const QString& filename,
+    const QStringList& files,
     const core::TSignaturesBySizes& signatures)
-    : mName(filename)
+    : mFiles(files)
     , mSignatures(signatures)
 {
 }
 
 void ThreadScanner::run()
 {
-    QFile file(mName);
-    QStringList result;
-    if (file.open(QFile::ReadOnly))
+    core::Scanner s(mSignatures);
+    for (auto& name: mFiles) 
     {
-        unsigned long long size = file.size();
-        char* bytes = (char*)file.map(0, size);
-
-        core::Scanner s(mSignatures);
-        core::TSignatures found;
-        s.scan(bytes, size, found);
-        for (auto& f: found)
+        QFile file(name);
+        QStringList result;
+        if (file.open(QFile::ReadOnly))
         {
-            result.push_back(f.second.c_str());
+            unsigned long long size = file.size();
+            char* bytes = (char*)file.map(0, size);
+
+            core::TSignatures found;
+            s.scan(bytes, size, found);
+            for (auto& f: found)
+            {
+                result.push_back(f.second.c_str());
+            }
         }
+        emit finished(name, result);
     }
-    emit finished(mName, result);
 }
 
 } // namespace objects
