@@ -20,8 +20,12 @@ Build
 *******
 
     $ cmake . ; make
+    
+and run
+
+    $ cd gui; ./Simsigdec
 
 Tests
 *****
     
-    $ cd core/tests; ScannerTest; configTest
+    $ cd core/tests; ./ScannerTest; ./configTest
