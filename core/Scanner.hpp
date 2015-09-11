@@ -17,10 +17,10 @@ namespace core
 /**
  * Handler to find malware byte sequences.
  */
-class Scanner 
+class Scanner
 {
 public:
-    
+
     /**
      * Input known signatures to check through.
      */

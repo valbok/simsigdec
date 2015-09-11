@@ -16,27 +16,27 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow) 
+    , ui(new Ui::MainWindow)
     , mHandler(0)
 {
     ui->setupUi(this);
-    if (!core::config::read("signatures.txt", mSingnatures)) 
+    if (!core::config::read("signatures.txt", mSingnatures))
     {
-        ui->textBrowser->insertHtml("<font color='red'>Could not read signatures from <b>signatures.txt</b></font><br/>\n"); 
+        ui->textBrowser->insertHtml("<font color='red'>Could not read signatures from <b>signatures.txt</b></font><br/>\n");
     }
 }
 
-MainWindow::~MainWindow() 
+MainWindow::~MainWindow()
 {
     delete ui;
     delete mHandler;
 }
 
-void MainWindow::findFiles(QStringList& files) 
+void MainWindow::findFiles(QStringList& files)
 {
     QString path = ui->pathEdit->text();
     ui->textBrowser->insertHtml("Reading from <b>" + path + "</b>:<br/>\n");
-    ui->pushButton->setEnabled(false);    
+    ui->pushButton->setEnabled(false);
     QDirIterator it(path, QStringList() << "*.*", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
@@ -45,15 +45,15 @@ void MainWindow::findFiles(QStringList& files)
         ui->statusBar->showMessage(QString::number(files.size()) + "> " + s);
     }
 
-    ui->textBrowser->insertHtml("Checking " + QString::number(files.size()) + " files<br/>\n");    
+    ui->textBrowser->insertHtml("Checking " + QString::number(files.size()) + " files<br/>\n");
 }
 
 void MainWindow::on_pushButton_clicked()
-{    
-    if (mSingnatures.empty()) 
+{
+    if (mSingnatures.empty())
     {
-        ui->textBrowser->insertHtml("No signatures! <br/>\n"); 
-        return; 
+        ui->textBrowser->insertHtml("No signatures! <br/>\n");
+        return;
     }
     ui->pushButton->setEnabled(false);
     QStringList files;
@@ -62,10 +62,10 @@ void MainWindow::on_pushButton_clicked()
     if (files.size() > 0) {
         delete mHandler;
         mHandler = new objects::Handler(files, mSingnatures);
-        connect(mHandler, SIGNAL(finishedFile(const QString&, const QStringList&)), 
+        connect(mHandler, SIGNAL(finishedFile(const QString&, const QStringList&)),
             this, SLOT(finishedFile(const QString&, const QStringList&)));
 
-        connect(mHandler, SIGNAL(processed(unsigned, unsigned, unsigned)), 
+        connect(mHandler, SIGNAL(processed(unsigned, unsigned, unsigned)),
             this, SLOT(processed(unsigned, unsigned, unsigned)));
 
         mHandler->process();
@@ -76,12 +76,12 @@ void MainWindow::on_pushButton_clicked()
     }
 }
 
-void MainWindow::finishedFile(const QString& name, const QStringList& list) 
+void MainWindow::finishedFile(const QString& name, const QStringList& list)
 {
-    if (!list.empty()) 
+    if (!list.empty())
     {
         QString infected = "<font color='red'>" +name + " infected by: </font><ul>\n";
-        for (auto& r: list) 
+        for (auto& r: list)
         {
             infected += "<li>" + r + "</li>";
         }
@@ -90,12 +90,12 @@ void MainWindow::finishedFile(const QString& name, const QStringList& list)
     }
 }
 
-void MainWindow::processed(unsigned processed, unsigned total, unsigned infected) 
+void MainWindow::processed(unsigned processed, unsigned total, unsigned infected)
 {
     ui->progressBar->setValue(processed * 100 / total);
     QString summary = "Found " + QString::number(infected) + " infected files!";
     ui->statusBar->showMessage(summary);
-    if (processed == total) 
+    if (processed == total)
     {
         ui->pushButton->setEnabled(true);
         ui->textBrowser->insertHtml(summary + "<br/>\n");

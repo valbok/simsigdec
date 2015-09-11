@@ -10,29 +10,29 @@
 #include <iostream>
 #include <sstream>
 
-namespace core 
+namespace core
 {
 
 Scanner::Scanner(const TSignaturesBySizes& signatures) noexcept
-    : mSignatures(signatures) 
+    : mSignatures(signatures)
 {
 }
 
 bool Scanner::scan(
-    const char* bytes, 
-    unsigned long long size, 
+    const char* bytes,
+    unsigned long long size,
     TSignatures& result) const
 {
-    for (unsigned long long i = 0; i < size; ++i) 
+    for (unsigned long long i = 0; i < size; ++i)
     {
-        for (auto& sigMap: mSignatures) 
+        for (auto& sigMap: mSignatures)
         {
             unsigned offset = sigMap.first;
             auto& signatures = sigMap.second;
 
             std::string s(bytes + i, bytes + i + offset);
             auto it = signatures.find(s);
-            if (it != signatures.end()) 
+            if (it != signatures.end())
             {
                 result.push_back(*it);
             }

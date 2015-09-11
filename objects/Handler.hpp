@@ -14,13 +14,13 @@
 #include <unordered_map>
 #include <core/types.hpp>
 
-namespace objects 
+namespace objects
 {
 
 /**
  * Handler collects target files and checks them for malware signatures.
  */
-class Handler : public QObject 
+class Handler : public QObject
 {
     Q_OBJECT
 public:
@@ -37,7 +37,7 @@ public:
     void process();
 
 public slots:
-    
+
     /**
      * Gets a signal when ThreadScanner finishes processing the file
      * @param Processed filename
@@ -46,7 +46,7 @@ public slots:
     void finishedTask(const QString& filename, const QStringList& result);
 
 signals:
-    
+
     /**
      * Emitted this when gets response from ThreadScanner about finished task.
      * @param Number of processed files.
@@ -77,7 +77,7 @@ private:
      * Result of processed files. Filename -> list of found signatures.
      */
     std::unordered_map<std::string, QStringList> mProcessed;
-    
+
     /**
      * Number of infected files.
      */

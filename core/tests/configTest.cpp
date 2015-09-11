@@ -12,7 +12,7 @@
 using namespace std;
 using namespace core;
 
-TEST(ConfigTest, testRead) 
+TEST(ConfigTest, testRead)
 {
     TSignaturesBySizes result;
     EXPECT_TRUE(config::read("data/signatures.txt", result));

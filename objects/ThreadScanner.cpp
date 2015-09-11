@@ -14,18 +14,18 @@ namespace objects
 {
 
 ThreadScanner::ThreadScanner(
-    const QString& filename, 
-    const core::TSignaturesBySizes& signatures) 
+    const QString& filename,
+    const core::TSignaturesBySizes& signatures)
     : mName(filename)
-    , mSignatures(signatures) 
+    , mSignatures(signatures)
 {
 }
 
-void ThreadScanner::run() 
+void ThreadScanner::run()
 {
     QFile file(mName);
     QStringList result;
-    if (file.open(QFile::ReadOnly)) 
+    if (file.open(QFile::ReadOnly))
     {
         unsigned long long size = file.size();
         char* bytes = (char*)file.map(0, size);
@@ -33,7 +33,7 @@ void ThreadScanner::run()
         core::Scanner s(mSignatures);
         core::TSignatures found;
         s.scan(bytes, size, found);
-        for (auto& f: found) 
+        for (auto& f: found)
         {
             result.push_back(f.second.c_str());
         }

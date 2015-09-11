@@ -13,15 +13,32 @@
 #include <unordered_map>
 #include <vector>
 
-namespace core 
+namespace core
 {
 
+/**
+ * Target bytes to check.
+ */
 typedef unsigned char* TBytes;
+
+/**
+ * Size of target bytes.
+ */
 typedef unsigned long long TSize;
 
+/**
+ * Maps predefinded sequence of bytes that should be considered as a malware and its GUID.
+ */
 typedef std::unordered_map<std::string, std::string> TSignaturesMap;
+
+/**
+ * Result vector of pairs: [(malware bytes, GUID)]
+ */
 typedef std::vector<std::pair<std::string, std::string> > TSignatures;
 
+/**
+ * Grouped sequences by length: {length of sequences: {sequences: GUIDs}}
+ */
 typedef std::unordered_map<unsigned, TSignaturesMap> TSignaturesBySizes;
 
 } // namespace core

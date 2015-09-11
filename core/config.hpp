@@ -14,7 +14,7 @@
 
 namespace core
 {
-namespace config 
+namespace config
 {
 
 /**

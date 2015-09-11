@@ -2,8 +2,8 @@ Simsigdec
 =========================
 Simple signature detector - an application to find malware in target files.
 Using predefined byte sequences that stored in text file in format:
-    
-    HexString.{id} 
+
+    HexString.{id}
 
 The application is splitted out to few layers.
 
@@ -20,12 +20,12 @@ Build
 *******
 
     $ cmake . ; make
-    
+
 and run
 
     $ cd gui; ./Simsigdec
 
 Tests
 *****
-    
+
     $ cd core/tests; ./ScannerTest; ./configTest

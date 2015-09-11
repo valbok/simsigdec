@@ -15,7 +15,7 @@
 #include <core/types.hpp>
 #include <objects/Handler.hpp>
 
-namespace Ui 
+namespace Ui
 {
     class MainWindow;
 }
