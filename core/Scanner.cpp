@@ -26,15 +26,15 @@ bool Scanner::scan(
     {
         for (auto& sigMap: mSignatures)
         {
-            unsigned offset = sigMap.first;
+            unsigned length = sigMap.first;
             auto& signatures = sigMap.second;
 
-            if (i + offset > size)
+            if (i + length > size)
             {
                 break;
             }
 
-            std::string s(bytes + i, offset);
+            std::string s(bytes + i, length);
 
             auto it = signatures.find(s);
             if (it != signatures.end())
