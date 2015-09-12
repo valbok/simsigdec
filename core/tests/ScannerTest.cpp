@@ -54,5 +54,4 @@ TEST(ScannerTest, testScanSignaturesFromFile)
     EXPECT_EQ(2, result.size());
     EXPECT_EQ("1", result[0].second);
     EXPECT_EQ("5c34b10f-3f6d-4cbb-09ec-0faa1ee17660", result[1].second);
-
 }

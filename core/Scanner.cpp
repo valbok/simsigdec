@@ -29,7 +29,13 @@ bool Scanner::scan(
             unsigned offset = sigMap.first;
             auto& signatures = sigMap.second;
 
-            std::string s(bytes + i, bytes + i + offset);
+            if (i + offset > size)
+            {
+                break;
+            }
+
+            std::string s(bytes + i, offset);
+
             auto it = signatures.find(s);
             if (it != signatures.end())
             {
