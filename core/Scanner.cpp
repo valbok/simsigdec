@@ -31,7 +31,7 @@ bool Scanner::scan(
 
             if (i + length > size)
             {
-                break;
+                continue;
             }
 
             std::string s(bytes + i, length);
