@@ -1,14 +1,13 @@
 Simsigdec
 =========================
-Simple signature detector - an application to find malware in target files.
-Using predefined byte sequences that stored in text file in format:
+Simple signature detector - an application to find a malware in target files, using predefined byte sequences that stored in text file in format:
 
     HexString.{id}
 
-The application is splitted out to few layers.
+The application is splitted out by few layers.
 
 * Core - is a scanner through sequences. And some utilities.
-* Objects - handlers to separate jobs between threads, get result from them using Qt signals/slots.
+* Objects - separates jobs between threads, gets result from them using Qt signals/slots.
 * Gui - visualizations of tasks.
 
 Requirements
