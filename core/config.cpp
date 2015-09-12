@@ -25,12 +25,15 @@ bool read(const char* name, TSignaturesBySizes& result) noexcept
         QTextStream in(&file);
         while (!in.atEnd())
         {
+            // Line could be like: "FFFF.{123}"
+            // Spliets to "FFF" and "123}"
             QStringList strings = in.readLine().split(".{");
             if (strings.size() != 2)
             {
                 continue;
             }
             std::string sig(strings[0].toLocal8Bit().constData());
+            // Splits to "123" and ""
             QStringList tmp = strings[1].split("}");
             if (tmp.size() == 0)
             {
@@ -38,6 +41,7 @@ bool read(const char* name, TSignaturesBySizes& result) noexcept
             }
             std::string guid(tmp[0].toLocal8Bit().constData());
 
+            // Convert hex string to its real number value.
             std::string signature;
             for (unsigned i = 0; i < sig.size(); i += 2)
             {
