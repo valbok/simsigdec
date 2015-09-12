@@ -11,12 +11,12 @@ The application is splitted out by few layers.
 * Gui - visualizations of tasks.
 
 Requirements
-************
+============
 
 It requires Qt5 and cmake.
 
 Build
-*******
+=====
 
     $ cmake . ; make
 
@@ -25,6 +25,6 @@ and run
     $ cd gui; ./Simsigdec
 
 Tests
-*****
+=====
 
     $ cd core/tests; ./ScannerTest; ./configTest
