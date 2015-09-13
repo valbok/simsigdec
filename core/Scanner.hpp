@@ -22,7 +22,7 @@ class Scanner
 public:
 
     /**
-     * Input known signatures to check through.
+     * @param Input known signatures to check through.
      */
     Scanner(const TSignaturesBySizes& signatures) noexcept;
 
