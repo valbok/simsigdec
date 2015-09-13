@@ -4,6 +4,10 @@ Simple signature detector - an application to find a malware in target files, us
 
     HexString.{id}
 
+or
+
+    69662840245f504f5354.{1}
+
 The application is splitted out by few layers.
 
 * Core - is a scanner through sequences. And some utilities.
