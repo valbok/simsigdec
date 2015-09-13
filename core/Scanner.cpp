@@ -24,6 +24,7 @@ bool Scanner::scan(
 {
     for (unsigned long long i = 0; i < size; ++i)
     {
+        // Go through signatures grouped by length.
         for (auto& sigMap: mSignatures)
         {
             unsigned length = sigMap.first;
