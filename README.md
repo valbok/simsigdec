@@ -8,7 +8,7 @@ or
 
     69662840245f504f5354.{1}
 
-The main point of this solution - an example of how to search signatures in linear time. The complexity is related only to number of bytes in target array. So checking byte sequences for malwere signatures takes linear time in average.
+The main point of this solution - an example of how to search signatures in linear time. The complexity is related only to number of bytes in target array. So checking byte sequences for malware signatures takes linear time in average.
 
 Also thread pool is used to split scanning. Each thread takes a batch of files to proceed and returns result to main thread using Qt signal/slots.
 
