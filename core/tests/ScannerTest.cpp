@@ -34,8 +34,8 @@ TEST(ScannerTest, testScanSignatures)
     EXPECT_TRUE(s.scan(bytes, size, result));
 
     EXPECT_EQ(2, result.size());
-    EXPECT_EQ("3", result[0].second);
-    EXPECT_EQ("1", result[1].second);
+    EXPECT_TRUE(result.find("if(@$_POST") != result.end());
+    EXPECT_TRUE(result.find("eval($_POST") != result.end());
 }
 
 TEST(ScannerTest, testScanSignaturesFromFile)
@@ -52,6 +52,6 @@ TEST(ScannerTest, testScanSignaturesFromFile)
     TSignatures result;
     EXPECT_TRUE(s.scan(bytes, size, result));
     EXPECT_EQ(2, result.size());
-    EXPECT_EQ("1", result[0].second);
-    EXPECT_EQ("5c34b10f-3f6d-4cbb-09ec-0faa1ee17660", result[1].second);
+    EXPECT_TRUE(result.find("if(@$_POST") != result.end());
+    EXPECT_TRUE(result.find("eval($_POST") != result.end());
 }

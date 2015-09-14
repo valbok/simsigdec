@@ -34,7 +34,7 @@ TEST(StressTest, testScanRead)
 
     getrusage(RUSAGE_SELF, &startTime);
 
-    EXPECT_FALSE(s.scan(bytes, size, result));
+    EXPECT_TRUE(s.scan(bytes, size, result));
 
     getrusage(RUSAGE_SELF, &stopTime);
     userTime = ((float)(stopTime.ru_utime.tv_sec - startTime.ru_utime.tv_sec)) +
@@ -42,5 +42,10 @@ TEST(StressTest, testScanRead)
 
     std::cout << "Scan time: " << userTime << " seconds\n";
 
-    EXPECT_EQ(4, result.size());
+    std::cout <<"Found " << result.size() << " signatures.\n";
+    for (auto& s: result)
+    {
+        std::cout << s.first <<":" <<s.second << std::endl;
+    }
+
 }

@@ -40,7 +40,7 @@ bool Scanner::scan(
             auto it = signatures.find(s);
             if (it != signatures.end())
             {
-                result.push_back(*it);
+                result[it->first] = it->second;
             }
         }
     }
