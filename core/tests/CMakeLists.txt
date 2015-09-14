@@ -6,3 +6,6 @@ target_link_libraries(ScannerTest gtest core Qt5::Core)
 add_executable(configTest configTest.cpp)
 target_link_libraries(configTest gtest core Qt5::Core)
 
+add_executable(stressTest stressTest.cpp)
+target_link_libraries(stressTest gtest core Qt5::Core)
+
