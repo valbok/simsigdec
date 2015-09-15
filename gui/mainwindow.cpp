@@ -101,7 +101,7 @@ void MainWindow::findFiles(QStringList& files)
 {
     QString path = ui->pathEdit->text();
     ui->textBrowser->insertHtml("Reading from <b>" + path + "</b>:<br/>\n");
-    QDirIterator it(path, QStringList() << "*.*", QDir::Files, QDirIterator::Subdirectories);
+    QDirIterator it(path, QStringList() << "*", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         QString s = it.next();
