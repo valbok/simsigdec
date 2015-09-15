@@ -14,12 +14,12 @@ using namespace core;
 
 TEST(ConfigTest, testRead)
 {
-    TSignaturesBySizes result;
+    TSignatures result;
     EXPECT_TRUE(config::read("data/signatures.txt", result));
     EXPECT_EQ(5, result.size());
     auto it = result.begin();
-    EXPECT_EQ(20, it->first);
+    EXPECT_EQ("meta-object-compiler", it->second);
     ++it;
-    EXPECT_EQ(11, it->first);
+    EXPECT_EQ("5c34b10f-3f6d-4cbb-09ec-0faa1ee17660", it->second);
 }
 

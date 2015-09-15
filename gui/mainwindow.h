@@ -10,10 +10,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QThreadPool>
+#include <QTcpSocket>
 #include <QStringList>
-#include <core/types.hpp>
-#include <objects/Handler.hpp>
 
 namespace Ui
 {
@@ -29,19 +27,55 @@ public:
     ~MainWindow();
 
 private slots:
+
+    /**
+     * On clicked scan button.
+     */
     void on_pushButton_clicked();
 
-public slots:
-    void finishedFile(const QString& filename, const QStringList& result);
-    void processed(unsigned processed, unsigned total, unsigned infected);
+    /**
+     * Emits when socket is connected.
+     */
+    void connected();
+
+    /**
+     * Emits when socket is disconnected.
+     */
+    void disconnected();
+
+    /**
+     * Main point to read data from server.
+     */
+    void readyRead();
+
+    /**
+     * Displayes an error as a dialog.
+     */
+    void displayError(QAbstractSocket::SocketError socketError);
 
 private:
+
+    /**
+     * Searches files in dir reqursively.
+     */
     void findFiles(QStringList& files);
 
 private:
+
+    /**
+     * Main ui.
+     */
     Ui::MainWindow *ui;
-    objects::Handler* mHandler;
-    core::TSignaturesBySizes mSingnatures;
+
+    /**
+     * Socket to connect the server.
+     */
+    QTcpSocket mSocket;
+
+    /**
+     * Files to proceed.
+     */
+    QStringList mFiles;
 };
 
 #endif // MAINWINDOW_H

@@ -8,35 +8,99 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QMessageBox>
 #include <QDir>
 #include <QDirIterator>
 #include <QStringList>
-#include <core/config.hpp>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , mHandler(0)
 {
     ui->setupUi(this);
-    if (!core::config::read("signatures.txt", mSingnatures))
-    {
-        ui->textBrowser->insertHtml("<font color='red'>Could not read signatures from <b>signatures.txt</b></font><br/>\n");
-    }
+    connect(&mSocket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    connect(&mSocket, SIGNAL(connected()), this, SLOT(connected()));
+    connect(&mSocket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    connect(&mSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(displayError(QAbstractSocket::SocketError)));
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete mHandler;
+}
+
+void MainWindow::readyRead()
+{
+    unsigned processed = 0;
+    unsigned total = 0;
+    unsigned infected = 0;
+    QString response = mSocket.readAll();
+    if (response.isEmpty())
+    {
+        return;
+    }
+
+    QStringList list = response.split("\n");
+    for(auto& r: list)
+    {
+        if (r.isEmpty())
+        {
+            continue;
+        }
+
+        QJsonDocument d = QJsonDocument::fromJson(r.toUtf8());
+        QJsonObject root = d.object();
+        processed = root["processed"].toString().toInt();
+        total = root["total"].toString().toInt();
+        infected = root["infected"].toString().toInt();
+        if (total > 0)
+        {
+            ui->progressBar->setValue(processed * 100 / total);
+        }
+        QString filename = root["filename"].toString();
+        QJsonArray result = root["result"].toArray();
+        if (!result.isEmpty())
+        {
+            QString summary = "<font color='red'>" + filename + " infected by: </font><ul>\n";
+            foreach (const QJsonValue & r, result)
+            {
+                summary += "<li>" + r.toString() + "</li>";
+            }
+            summary += "</ul><br/>\n";
+            ui->textBrowser->insertHtml(summary);
+        }
+    }
+
+    QString summary = "Found " + QString::number(infected) + " infected files!";
+    ui->statusBar->showMessage(summary);
+    if (processed == total)
+    {
+        ui->textBrowser->insertHtml(summary + "<br/>\n");
+    }
+}
+
+void MainWindow::disconnected()
+{
+    ui->pushButton->setEnabled(true);
+}
+
+void MainWindow::connected()
+{
+    QString req = mFiles.join("\n");
+    mSocket.write(req.toLocal8Bit().constData());
 }
 
 void MainWindow::findFiles(QStringList& files)
 {
     QString path = ui->pathEdit->text();
     ui->textBrowser->insertHtml("Reading from <b>" + path + "</b>:<br/>\n");
-    ui->pushButton->setEnabled(false);
     QDirIterator it(path, QStringList() << "*.*", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
@@ -50,54 +114,27 @@ void MainWindow::findFiles(QStringList& files)
 
 void MainWindow::on_pushButton_clicked()
 {
-    if (mSingnatures.empty())
+    mFiles = QStringList();
+    findFiles(mFiles);
+    if (!mFiles.isEmpty())
     {
-        ui->textBrowser->insertHtml("No signatures! <br/>\n");
+        ui->pushButton->setEnabled(false);
+        mSocket.connectToHost("localhost", 6666);
+    }
+}
+
+void MainWindow::displayError(QAbstractSocket::SocketError socketError)
+{
+    ui->pushButton->setEnabled(true);
+    if (socketError == QTcpSocket::RemoteHostClosedError)
+    {
         return;
     }
-    ui->pushButton->setEnabled(false);
-    QStringList files;
-    findFiles(files);
 
-    if (files.size() > 0) {
-        delete mHandler;
-        mHandler = new objects::Handler(files, mSingnatures);
-        connect(mHandler, SIGNAL(finishedFile(const QString&, const QStringList&)),
-            this, SLOT(finishedFile(const QString&, const QStringList&)));
+    QMessageBox::critical(this, tr("Network error"),
+        tr("The following error occurred: %1.")
+        .arg(mSocket.errorString()));
 
-        connect(mHandler, SIGNAL(processed(unsigned, unsigned, unsigned)),
-            this, SLOT(processed(unsigned, unsigned, unsigned)));
-
-        mHandler->process();
-    }
-    else
-    {
-        ui->pushButton->setEnabled(true);
-    }
-}
-
-void MainWindow::finishedFile(const QString& name, const QStringList& list)
-{
-    if (!list.empty())
-    {
-        QString infected = "<font color='red'>" +name + " infected by: </font><ul>\n";
-        for (auto& r: list)
-        {
-            infected += "<li>" + r + "</li>";
-        }
-        infected += "</ul><br/>\n";
-        ui->textBrowser->insertHtml(infected);
-    }
-}
-
-void MainWindow::processed(unsigned processed, unsigned total, unsigned infected)
-{
-    ui->progressBar->setValue(processed * 100 / total);
-    QString summary = "Found " + QString::number(infected) + " infected files!";
-    ui->statusBar->showMessage(summary);
-    if (processed == total)
-    {
-        ui->pushButton->setEnabled(true);
-        ui->textBrowser->insertHtml(summary + "<br/>\n");
-    }
+    mSocket.close();
+    ui->progressBar->setValue(0);
 }

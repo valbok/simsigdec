@@ -12,8 +12,9 @@
 #include <QRunnable>
 #include <QStringList>
 #include <core/types.hpp>
+#include <core/Index.hpp>
 
-namespace objects
+namespace server
 {
 
 /**
@@ -25,9 +26,10 @@ class ThreadScanner : public QObject, public QRunnable
 public:
 
     /**
-     * @param Files to process
+     * @param Files to process.
+     * @param Index.
      */
-    ThreadScanner(const QStringList& files, const core::TSignaturesBySizes& signatures);
+    ThreadScanner(const QStringList& files, const core::Index& index);
 
     /**
      * @copydoc QRunnable::run()
@@ -49,11 +51,11 @@ private:
     const QStringList mFiles;
 
     /**
-     * Predefined sequences of bytes.
+     * Predefined index of sequences.
      */
-    const core::TSignaturesBySizes& mSignatures;
+    const core::Index& mIndex;
 };
 
-} // namespace objects
+} // namespace server
 
 #endif // SSD_THREADSCANNER

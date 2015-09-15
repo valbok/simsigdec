@@ -31,11 +31,6 @@ typedef unsigned long long TSize;
  */
 typedef std::unordered_map<std::string, std::string> TSignatures;
 
-/**
- * Grouped sequences by length: {length of sequences: {sequences: GUIDs}}
- */
-typedef std::unordered_map<unsigned, TSignatures> TSignaturesBySizes;
-
 } // namespace core
 
 #endif // SSD_TYPES

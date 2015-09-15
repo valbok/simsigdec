@@ -10,6 +10,7 @@
 #define SSD_SCANNER
 
 #include "types.hpp"
+#include "Index.hpp"
 
 namespace core
 {
@@ -22,12 +23,15 @@ class Scanner
 public:
 
     /**
-     * @param Input known signatures to check through.
+     * @param Known index of signatures to check through.
      */
-    Scanner(const TSignaturesBySizes& signatures) noexcept;
+    explicit Scanner(const Index& index) noexcept;
 
     /**
      * Scans bytes and finds predefined sequence of byte. If found, bytes considered infected.
+     * @param Input bytes to check.
+     * @param Size of bytes.
+     * @param[out] Where to store found elements.
      * @return true If found something.
      */
     bool scan(const char* bytes, unsigned long long size, TSignatures& result) const;
@@ -35,9 +39,9 @@ public:
 private:
 
     /**
-     * Predefined set of signatures.
+     * Predefinded search index of signatures.
      */
-    const TSignaturesBySizes& mSignatures;
+    const Index& mIndex;
 
 };
 

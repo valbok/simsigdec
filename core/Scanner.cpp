@@ -7,13 +7,13 @@
  */
 
 #include "Scanner.hpp"
-#include <sstream>
+#include <queue>
 
 namespace core
 {
 
-Scanner::Scanner(const TSignaturesBySizes& signatures) noexcept
-    : mSignatures(signatures)
+Scanner::Scanner(const Index& index) noexcept
+    : mIndex(index)
 {
 }
 
@@ -22,25 +22,42 @@ bool Scanner::scan(
     unsigned long long size,
     TSignatures& result) const
 {
+    // Keeps prev sequences.
+    std::queue<std::string> q;
+
     for (unsigned long long i = 0; i < size; ++i)
     {
-        // Go through signatures grouped by length.
-        for (auto& sigMap: mSignatures)
+        std::string curr = std::string(1, bytes[i]);
+        q.push("");
+        // At least 1 item exists here.
+        while (!q.empty())
         {
-            unsigned length = sigMap.first;
-            auto& signatures = sigMap.second;
+            std::string prev = q.front();
+            q.pop();
 
-            if (i + length > size)
+            std::string v = prev + curr;
+
+            if (mIndex.has(v))
             {
-                continue;
-            }
+                auto item = mIndex.value(v);
+                // Clear queue.
+                q = {};
+                for (unsigned j = 0, cc = 0; j < item.counts.size() && cc < 2; ++j)
+                {
+                    if (item.counts[j] > 0)
+                    {
+                        q.push(v.substr(j));
+                        ++cc;
+                    }
+                }
 
-            std::string s(bytes + i, length);
+                for (auto& m: item.matches)
+                {
+                    result[m.first] = m.second;
+                }
 
-            auto it = signatures.find(s);
-            if (it != signatures.end())
-            {
-                result[it->first] = it->second;
+                // Quit queue loop.
+                break;
             }
         }
     }

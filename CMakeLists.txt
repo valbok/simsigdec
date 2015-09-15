@@ -24,9 +24,11 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Core)
 find_package(Qt5Widgets)
+find_package(Qt5Network)
 
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
+include_directories(${Qt5Network_INCLUDE_DIRS})
 
 add_library(gtest
     lib/gtest/src/gtest_main.cc 
@@ -35,5 +37,5 @@ add_library(gtest
 include_directories(.)
 add_subdirectory(core)
 add_subdirectory(gui)
-add_subdirectory(objects)
+add_subdirectory(server)
 add_subdirectory(core/tests)

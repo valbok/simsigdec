@@ -17,7 +17,7 @@ namespace core
 namespace config
 {
 
-bool read(const char* name, TSignaturesBySizes& result) noexcept
+bool read(const char* name, TSignatures& result) noexcept
 {
     QFile file(name);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -41,7 +41,7 @@ bool read(const char* name, TSignaturesBySizes& result) noexcept
             }
             std::string guid(tmp[0].toLocal8Bit().constData());
 
-            // Convert hex string to its real number value.
+            // Convert hex string to number value.
             std::string signature;
             for (unsigned i = 0; i < sig.size(); i += 2)
             {
@@ -51,7 +51,7 @@ bool read(const char* name, TSignaturesBySizes& result) noexcept
                 ss >> ch;
                 signature.push_back((char)ch);
             }
-            result[signature.size()][signature] = guid;
+            result[signature] = guid;
         }
     }
 

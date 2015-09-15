@@ -10,20 +10,20 @@
 #include <core/Scanner.hpp>
 #include <QFile>
 
-namespace objects
+namespace server
 {
 
 ThreadScanner::ThreadScanner(
     const QStringList& files,
-    const core::TSignaturesBySizes& signatures)
+    const core::Index& index)
     : mFiles(files)
-    , mSignatures(signatures)
+    , mIndex(index)
 {
 }
 
 void ThreadScanner::run()
 {
-    core::Scanner s(mSignatures);
+    core::Scanner s(mIndex);
     for (auto& name: mFiles) 
     {
         QFile file(name);
@@ -32,12 +32,14 @@ void ThreadScanner::run()
         {
             unsigned long long size = file.size();
             char* bytes = (char*)file.map(0, size);
-
-            core::TSignatures found;
-            s.scan(bytes, size, found);
-            for (auto& f: found)
+            if (bytes != 0)
             {
-                result.push_back(f.second.c_str());
+                core::TSignatures found;
+                s.scan(bytes, size, found);
+                for (auto& f: found)
+                {
+                    result.push_back(f.second.c_str());
+                }
             }
         }
         emit finished(name, result);

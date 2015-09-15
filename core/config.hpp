@@ -19,9 +19,11 @@ namespace config
 
 /**
  * Reads from signature file and makes proper result set.
+ * @param Filename where signatures located.
+ * @param[out] Signatures and guids.
  * @return true If found.
  */
-bool read(const char* name, TSignaturesBySizes& result) noexcept;
+bool read(const char* name, TSignatures& result) noexcept;
 
 } // namespace config
 } // namespace core

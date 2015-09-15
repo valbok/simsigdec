@@ -23,10 +23,11 @@ TEST(StressTest, testScanRead)
     unsigned long long size = file.size();
     char* bytes = (char*)file.map(0, size);
 
-    TSignaturesBySizes sigMap;
+    TSignatures sigMap;
     EXPECT_TRUE(config::read("data/bigfile.signatures.txt", sigMap));
 
-    Scanner s(sigMap);
+    Index index(sigMap);
+    Scanner s(index);
     TSignatures result;
 
     float  userTime;
@@ -47,5 +48,4 @@ TEST(StressTest, testScanRead)
     {
         std::cout << s.first <<":" <<s.second << std::endl;
     }
-
 }

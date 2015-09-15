@@ -3,4 +3,4 @@ add_library(gui
 )
 
 add_executable(Simsigdec main.cpp)
-target_link_libraries(Simsigdec gui objects core Qt5::Widgets)
+target_link_libraries(Simsigdec gui core Qt5::Widgets Qt5::Network)
