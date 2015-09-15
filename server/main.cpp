@@ -13,10 +13,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     server::Server s;
-    if (s.start()) 
+    if (!s.start()) 
     {
-        return a.exec();
+        return 1;
     }
 
-    return 1;
+    return a.exec();
 }
