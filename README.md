@@ -10,7 +10,7 @@ or
 
 The main point of this solution - an example of how to search signatures in linear time. The complexity is related only to number of bytes in target array. So checking byte sequences for malware signatures takes linear time in average.
 
-Also thread pool is used to split scanning. Each thread takes a batch of files to proceed and returns result to main thread using Qt signal/slots.
+Also created a separate server that handles requests from gui users like cheching files and sends result back as JSON string.
 
 Structure
 *********
@@ -18,7 +18,7 @@ Structure
 The application is splitted out by few layers.
 
 * Core - is a scanner through sequences. And some utilities.
-* Objects - separates jobs between threads, gets result from them using Qt signals/slots.
+* Server - gets connection from gui users. Each connection is a list of file that need to proccess. The server splits the files to batches and creats few tasks that will be executed in separate threads using thread pool. Result will be sent as a JSON to client.
 * Gui - visualizations of tasks.
 
 Requirements
