@@ -31,9 +31,13 @@ Build
 
     $ cmake . ; make
 
-and run
+and run server
+    
+    $ cd server; ./Server
 
-    $ cd gui; ./Simsigdec
+run gui
+
+    $ cd ../gui; ./Simsigdec
 
 Tests
 =====
