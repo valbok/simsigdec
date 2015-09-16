@@ -44,5 +44,5 @@ void Server::incomingConnection(qintptr socketDescriptor)
     QThreadPool::globalInstance()->start(task);
 }
 
-} // namespace objects
+} // namespace server
 
