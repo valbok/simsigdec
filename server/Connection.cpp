@@ -49,7 +49,7 @@ void Connection::readyRead()
     QStringList files = array.split("\n");
     mTotal = files.size();
 
-    const int numFiles = files.size() / QThread::idealThreadCount();
+    const int numFiles = files.size() > QThread::idealThreadCount() ? files.size() / QThread::idealThreadCount() : files.size();
     QStringList batch;
     for (int i = 0; i < files.size(); ++i)
     {
