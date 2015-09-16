@@ -32,7 +32,7 @@ Connection::Connection(qintptr socketDescriptor, const core::Index& index)
 
 void Connection::run()
 {
-    // No need to quit this function before connection is established.
+    // Do not quite the function if connection is still established.
     while (mSocket.state() != QAbstractSocket::UnconnectedState)
     {
     }
