@@ -10,7 +10,7 @@ or
 
 The main point of this solution - an example of how to search signatures in linear time. The complexity is related only to number of bytes in target array. So checking byte sequences for malware signatures takes linear time in average.
 
-Also created a separate server that handles requests from gui users like cheching files and sends result back as JSON string.
+Also created a separate server process that handles requests from gui users like checking files and sends result back as JSON string.
 
 Structure
 *********
